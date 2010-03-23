@@ -6,11 +6,11 @@ h3. Welcome to the home of **Scribe**, the simple, extensible and cross-provider
 
 h1. Why yet another OAuth library?
 
-This and other interesting questions are answered in the [[FAQ]] 
+This and other interesting questions are answered in the "FAQ":http://wiki.github.com/fernandezpablo85/scribe/faq
 
 h1. Getting Started (Quickly)
 
-Check the [[Getting Started]] page and start rocking!
+Check the "Getting Started":http://wiki.github.com/fernandezpablo85/scribe/getting-started page and start rocking!
 
 h1. About the author
 
