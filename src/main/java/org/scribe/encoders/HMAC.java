@@ -38,6 +38,6 @@ public class HMAC {
     Mac mac = Mac.getInstance(HMAC_SHA1);
     mac.init(key);
     byte[] bytes = mac.doFinal(toSign.getBytes(UTF8));
-    return Base64.encodeBase64String(bytes).replace("\r\n", "");
+    return new String(Base64.encodeBase64(bytes)).replace("\r\n", "");
   }
 }
