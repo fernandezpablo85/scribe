@@ -21,6 +21,11 @@ import java.io.*;
 import java.net.*;
 import java.util.*;
 
+/**
+ * Represents an HTTP Request object
+ * 
+ * @author Pablo Fernandez
+ */
 public class Request {
   
   private static final String CONTENT_LENGTH ="Content-Length"; 
@@ -38,6 +43,12 @@ public class Request {
     this.headers = new HashMap<String, String>();
   }
   
+  /**
+   * Execute the request and return a {@link Response}
+   * 
+   * @return Http Response
+   * @throws RuntimeException if the connection cannot be created.
+   */
   public Response send(){
     try{
       return doSend();
@@ -79,18 +90,45 @@ public class Request {
     conn.getOutputStream().write(payload.getBytes());
   }
   
+  /**
+   * Add an HTTP Header to the Request
+   * 
+   * @param name
+   * @param value
+   */
   public void addHeader(String key, String value){
     this.headers.put(key, value);
   }
   
+  /**
+   * Add a body Parameter (for POST/ PUT Requests)
+   * 
+   * @param name
+   * @param value
+   */
   public void addBodyParameter(String key, String value){
     this.bodyParams.put(key, value);
   }
   
+  /**
+   * Add body payload.
+   * 
+   * This method is used when the HTTP body is not a form-url-encoded string, but another thing.
+   * Like for example XML.
+   * 
+   * Note: The contents are not part of the OAuth signature
+   * 
+   * @param payload
+   */
   public void addPayload(String payload){
     this.payload = payload;
   }
   
+  /**
+   * Get a {@link Map} of the query string parameters.
+   * 
+   * @return a map containing the query string parameters
+   */
   public Set<Map.Entry<String, String>> getQueryStringParams(){
     try{
       Map<String, String> params = new HashMap<String, String>();
@@ -106,23 +144,47 @@ public class Request {
       throw new RuntimeException("Malformed URL",mue);
     }
   }
-  
+  /**
+   * Obtains a {@link Map} of the body parameters.
+   * 
+   * @return a map containing the body parameters.
+   */
   public Set<Map.Entry<String, String>> getBodyParams(){
     return bodyParams.entrySet();
   }
     
+  /**
+   * Obtains the URL of the HTTP Request.
+   * 
+   * @return the original URL of the HTTP Request
+   */
   public String getUrl(){
     return url;
   }
   
+  /**
+   * Returns the URL without the port and the query string part.
+   * 
+   * @return the OAuth-sanitized URL
+   */
   public String getSanitizedUrl(){
     return url.replaceAll("\\?.*", "").replace("\\:\\d{4}", "");
   }
   
+  /**
+   * Returns the HTTP Verb
+   * 
+   * @return the verb
+   */
   public Verb getVerb(){
     return verb; 
   }
-    
+   
+  /**
+   * An enumeration containing the most common HTTP Verbs.
+   * 
+   * @author Pablo Fernandez
+   */
   public static enum Verb{
     GET,
     POST,

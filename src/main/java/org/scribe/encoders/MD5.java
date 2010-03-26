@@ -17,10 +17,21 @@ package org.scribe.encoders;
 
 import java.security.*;
 
+/**
+ * Utility class to generate MD5 hashes
+ * 
+ * @author Pablo Fernandez
+ */
 public class MD5 {
   
   private static final char[] HEX_DIGITS = "0123456789abcdef".toCharArray();
   
+  /**
+   * Calculates an MD5 hash <em>based on the {@link Object#toString()} method</em>.
+   * 
+   * @param any object
+   * @return MD5 hash
+   */
   public static String hexHash(Object obj){
     String toHash = obj.toString();
     try{

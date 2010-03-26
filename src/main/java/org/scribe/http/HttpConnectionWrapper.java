@@ -20,8 +20,21 @@ import java.net.*;
 
 import org.scribe.http.Request.*;
 
+/**
+ * Wrapper for {@link HttpURLConnection}s.
+ * 
+ * @author Pablo Fernandez
+ */
 public class HttpConnectionWrapper {
 
+  /**
+   * Returns a new {@link Request}, created form the parameter.
+   * 
+   * This class is useful to integrate <em>Scribe</em> with existing applications.
+   * 
+   * @param connection to wrap
+   * @return wrapper
+   */
   public static Request wrap(HttpURLConnection connection){
     Request result = new Request(Verb.valueOf(connection.getRequestMethod()), connection.getURL().toExternalForm());
     

@@ -19,6 +19,11 @@ import java.io.*;
 import java.net.*;
 import java.util.*;
 
+/**
+ * Represents an HTTP Response.
+ * 
+ * @author Pablo Fernandez
+ */
 public class Response {
   
   private static final String EMPTY = "";
@@ -27,7 +32,8 @@ public class Response {
   private String body;
   private Map<String, String> headers;
   
-  public Response(HttpURLConnection connection) throws IOException{
+  
+  Response(HttpURLConnection connection) throws IOException{
     try{
       connection.connect();
       code = connection.getResponseCode();
@@ -69,22 +75,48 @@ public class Response {
     return headers;
   }
   
+  /**
+   * Checks if the code is in the successful or redirect range.
+   * 
+   * @return true if successful
+   */
   private boolean wasSuccessful(){
     return code >= 200 && code < 400;
   }
   
+  /**
+   * Obtains the HTTP Response body
+   * 
+   * @return response body
+   */
   public String getBody(){
     return body;
   }
   
+  /**
+   * Obtains the HTTP status code
+   * 
+   * @return the status code
+   */
   public int getCode(){
     return code;
   }
   
+  /**
+   * Obtains a {@link Map} containing the HTTP Response Headers
+   * 
+   * @return headers
+   */
   public Map<String, String> getHeaders(){
     return headers;
   }
   
+  /**
+   * Obtains a single HTTP Header value, or null if undefined
+   * 
+   * @param header name
+   * @return header value or null
+   */
   public String getHeader(String name){
     return headers.get(name);
   }

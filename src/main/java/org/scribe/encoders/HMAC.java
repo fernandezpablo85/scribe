@@ -20,11 +20,24 @@ import javax.crypto.spec.*;
 
 import org.apache.commons.codec.binary.*;
 
+/**
+ * An utility class for HMAC-SHA1 signature methods.  
+ * 
+ * @author Pablo Fernandez
+ */
 public class HMAC {
 
   private static final String UTF8 = "UTF-8";
   private static final String HMAC_SHA1 = "HmacSHA1";
   
+  /**
+   * Creates a Base64-encoded MAC-SHA1 for a given string.
+   *     
+   * @param String to sign
+   * @param Key used to sign the string (usually a shared secret)
+   * @return HMAC-SHA1 base64-encoded signature
+   * @throws RuntimeException if the signature cannot be calculated.
+   */
   public static String sign(String toSign, String key){
     try{
       return doSign(toSign,key);

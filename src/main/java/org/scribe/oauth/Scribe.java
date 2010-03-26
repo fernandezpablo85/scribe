@@ -21,6 +21,13 @@ import org.scribe.http.*;
 import org.scribe.http.Request.*;
 import org.scribe.providers.*;
 
+/**
+ * The main class. Provides an access point for all OAuth methods.
+ * 
+ * Is intended to be used as a Singleton, and instantiated with the {@link Scribe#getInstance(Properties)} method.
+ * 
+ * @author Pablo Fernandez
+ */
 public class Scribe {
 
   private static final String PROVIDER = "scribe.provider";
@@ -36,6 +43,12 @@ public class Scribe {
   private final Properties config;
   private DefaultProvider provider;
   
+  /**
+   * Factory method
+   * 
+   * @param Scribe properties
+   * @return The Scribe single instance
+   */
   public static synchronized Scribe getInstance(Properties props){
     if(instance == null)
         instance = new Scribe(props);
@@ -63,6 +76,11 @@ public class Scribe {
     return (string == null || string.trim().length() <= 0);
   }
   
+  /**
+   * Obtains the request token and token secret.
+   * 
+   * @return the request token and token secret.
+   */
   public String getRequestToken(){
     Request request = getRTRequest();
     OAuthSigner signer = getOAuthSigner();
@@ -80,6 +98,14 @@ public class Scribe {
     return new OAuthSigner(config.getProperty(CONSUMER_KEY),config.getProperty(CONSUMER_SECRET),provider);
   }
 
+  /**
+   * Obtains the access token and access token secret.
+   * 
+   * @param request token
+   * @param request token secret
+   * @param verifier
+   * @return access token and access token secret
+   */
   public String getAccessToken(String requestToken, String tokenSecret, String verifier){
     Request request = getATRequest();
     OAuthSigner signer = getOAuthSigner();
@@ -93,6 +119,13 @@ public class Scribe {
     return new Request(Verb.valueOf(config.getProperty(ACCESS_TOKEN_VERB)), config.getProperty(ACCESS_TOKEN_URL));
   }
   
+  /**
+   * Adds an OAuth header to the {@link Request} 
+   * 
+   * @param Request to sign
+   * @param access token
+   * @param access token secret
+   */
   public void signRequest(Request request, String token, String tokenSecret){
     OAuthSigner signer = getOAuthSigner();
     signer.sign(request, token, tokenSecret);

@@ -19,10 +19,22 @@ import java.io.*;
 import java.net.*;
 import java.util.*;
 
+/**
+ * Utility class to perform URL-encoding operations
+ * 
+ * @author Pablo Fernandez
+ */
 public class URL {
 
-private static final String UTF8 = "UTF-8";
+  private static final String UTF8 = "UTF-8";
   
+  /**
+   * URLencode a given string
+   * 
+   * @param string to encode
+   * @return encoded string
+   * @throws RuntimeException if the string cannot be encoded
+   */
   public static String percentEncode(String string){
     try{
       return URLEncoder.encode(string,UTF8);
@@ -31,11 +43,19 @@ private static final String UTF8 = "UTF-8";
     }
   }
   
+  /**
+   * Transforms a {@link Map<String, String>} to a querystring-like (form-url-encoded) string 
+   * 
+   * The Map keys are the parameter names, and the values the parameter values.
+   * 
+   * @param parameter map
+   * @return Querystring
+   */
   public static String queryString(Map<String, String > params){
     return (params.size() <= 0) ? "" : "?" + getFormEncodedString(params);
   }
   
-  public static String getFormEncodedString(Map<String, String> params){
+  private static String getFormEncodedString(Map<String, String> params){
     StringBuffer buffer = new StringBuffer();
     for(Map.Entry<String, String> entry : params.entrySet()){
       buffer.append(percentEncode(entry.getKey()))

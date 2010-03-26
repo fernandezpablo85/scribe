@@ -18,15 +18,44 @@ package org.scribe.providers;
 import org.scribe.http.*;
 import org.scribe.oauth.*;
 
+/**
+ * Default OAuth provider.
+ * 
+ * The methods defined here are hooks for subclasses to override. They do nothing by default.
+ * 
+ * @author Pablo Fernandez
+ */
 public class DefaultProvider {
   
+  /**
+   * Hook that lets you modify the string to sign before the HMAC-SHA1 signature is calculated.
+   * 
+   * @param Request 
+   * @param String to sign
+   * @param the call type
+   * @return The modified string to sign
+   */
   public String tuneStringToSign(Request request, String toSign, CallType type){
     return toSign;
   }
   
+  /**
+   * Hook that lets you modify the OAuth header beofre adding it to the {@link Request}
+   * 
+   * @param Request
+   * @param The OAuth header
+   * @param the call type
+   * @return the modified OAuth header
+   */
   public String tuneOAuthHeader(Request request, String oAuthHeader, CallType type){
     return oAuthHeader;
   }
   
+  /**
+   * Hook that lets you modify the Response object before sending it.
+   * 
+   * @param Request
+   * @param the call type
+   */
   public void tuneRequest(Request request, CallType type){}
 }

@@ -18,12 +18,20 @@ package org.scribe.providers;
 import org.scribe.http.*;
 import org.scribe.oauth.*;
 
+/**
+ * A custom provider that works with LinkedIn OAuth.
+ * 
+ * @author Pablo Fernandez
+ */
 public class LinkedInProvider extends DefaultProvider {
 
   private static final String TILDE_DECODED = "~";
   private static final String SEPARATOR = "&";
   private static final String TILDE_ENCODED = "%7E";
 
+  /**
+   * {@inheritDoc}
+   */
   @Override
   public String tuneStringToSign(Request request, String toSign, CallType type) {
     if (type != CallType.RESOURCE) {
