@@ -15,7 +15,7 @@ limitations under the License.
 */
 package org.scribe.oauth;
 
-public class OAuth {  
+class OAuth {  
   public static final String TIMESTAMP = "oauth_timestamp";
   public static final String SIGN_METHOD = "oauth_signature_method";
   public static final String SIGNATURE = "oauth_signature";

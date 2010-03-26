@@ -21,7 +21,7 @@ import org.scribe.encoders.*;
 import org.scribe.http.*;
 import org.scribe.providers.*;
 
-public class OAuthSigner {
+class OAuthSigner {
 
   private final String consumerSecret;
   private final OAuthParameters params;

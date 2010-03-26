@@ -19,7 +19,7 @@ import java.util.*;
 
 import org.scribe.encoders.*;
 
-public class OAuthParameters {
+class OAuthParameters {
 
   Map<String, String> params = new HashMap<String, String>();
   

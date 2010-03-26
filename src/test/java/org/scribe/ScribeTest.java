@@ -21,6 +21,7 @@ import java.util.*;
 import org.junit.*;
 import org.scribe.http.*;
 import org.scribe.http.Request.*;
+import org.scribe.oauth.*;
 
 import static org.junit.Assert.*;
 
