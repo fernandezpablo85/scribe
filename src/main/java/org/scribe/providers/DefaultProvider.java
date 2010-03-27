@@ -15,8 +15,11 @@ limitations under the License.
 */
 package org.scribe.providers;
 
+import java.util.regex.*;
+
 import org.scribe.http.*;
 import org.scribe.oauth.*;
+
 
 /**
  * Default OAuth provider.
@@ -27,6 +30,8 @@ import org.scribe.oauth.*;
  */
 public class DefaultProvider {
   
+  private static final String TOKEN_REGEX = "oauth_token=(\\S*)&oauth_token_secret=(\\S*?)(&(.*))?";  
+
   /**
    * Hook that lets you modify the string to sign before the HMAC-SHA1 signature is calculated.
    * 
@@ -58,4 +63,21 @@ public class DefaultProvider {
    * @param the call type
    */
   public void tuneRequest(Request request, CallType type){}
+  
+  public Token parseRequestTokens(String response){
+    return parseTokens(response);
+  }
+  
+  public Token parseAccessTokens(String response){
+    return parseTokens(response);
+  }
+  
+  private Token parseTokens(String response){
+    Matcher matcher = Pattern.compile(TOKEN_REGEX).matcher(response);
+    if(matcher.matches()){
+      return new Token(matcher.group(1), matcher.group(2));
+    }else{
+      throw new RuntimeException("Could not find request token or secret in response: " + response);
+    }  
+  }
 }

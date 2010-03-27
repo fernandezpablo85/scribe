@@ -79,15 +79,15 @@ public class Scribe {
   /**
    * Obtains the request token and token secret.
    * 
-   * @return the request token and token secret.
+   * @return the request token
    */
-  public String getRequestToken(){
+  public Token getRequestToken(){
     Request request = getRTRequest();
     OAuthSigner signer = getOAuthSigner();
     signer.signForRequestToken(request, config.getProperty(CALLBACK_URL));
     provider.tuneRequest(request, CallType.REQUEST_TOKEN);
     Response response = request.send();
-    return response.getBody();
+    return provider.parseRequestTokens(response.getBody());
   }
   
   private Request getRTRequest() {
@@ -102,17 +102,16 @@ public class Scribe {
    * Obtains the access token and access token secret.
    * 
    * @param request token
-   * @param request token secret
    * @param verifier
-   * @return access token and access token secret
+   * @return access token
    */
-  public String getAccessToken(String requestToken, String tokenSecret, String verifier){
+  public Token getAccessToken(Token token, String verifier){
     Request request = getATRequest();
     OAuthSigner signer = getOAuthSigner();
-    signer.signForAccessToken(request, requestToken, tokenSecret, verifier);
+    signer.signForAccessToken(request, token.getToken(), token.getSecret(), verifier);
     provider.tuneRequest(request, CallType.ACCESS_TOKEN);
     Response response = request.send();
-    return response.getBody();
+    return provider.parseAccessTokens(response.getBody());
   }
 
   private Request getATRequest() {
@@ -124,11 +123,10 @@ public class Scribe {
    * 
    * @param Request to sign
    * @param access token
-   * @param access token secret
    */
-  public void signRequest(Request request, String token, String tokenSecret){
+  public void signRequest(Request request, Token tokens){
     OAuthSigner signer = getOAuthSigner();
-    signer.sign(request, token, tokenSecret);
+    signer.sign(request, tokens.getToken(), tokens.getSecret());
     provider.tuneRequest(request, CallType.RESOURCE);
   }
 }
