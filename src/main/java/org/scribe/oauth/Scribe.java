@@ -108,7 +108,7 @@ public class Scribe {
   public Token getAccessToken(Token token, String verifier){
     Request request = getATRequest();
     OAuthSigner signer = getOAuthSigner();
-    signer.signForAccessToken(request, token.getToken(), token.getSecret(), verifier);
+    signer.signForAccessToken(request, token, verifier);
     provider.tuneRequest(request, CallType.ACCESS_TOKEN);
     Response response = request.send();
     return provider.parseAccessTokens(response.getBody());
@@ -124,9 +124,9 @@ public class Scribe {
    * @param Request to sign
    * @param access token
    */
-  public void signRequest(Request request, Token tokens){
+  public void signRequest(Request request, Token token){
     OAuthSigner signer = getOAuthSigner();
-    signer.sign(request, tokens.getToken(), tokens.getSecret());
+    signer.sign(request, token);
     provider.tuneRequest(request, CallType.RESOURCE);
   }
 }

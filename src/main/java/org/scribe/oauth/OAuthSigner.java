@@ -42,21 +42,21 @@ class OAuthSigner {
     request.addHeader(OAuth.HEADER, oAuthHeader);
   }
   
-  public void signForAccessToken(Request request, String requestToken, String tokenSecret, String verifier){
-    params.put(OAuth.TOKEN, requestToken);
+  public void signForAccessToken(Request request, Token requestToken, String verifier){
+    params.put(OAuth.TOKEN, requestToken.getToken());
     params.put(OAuth.VERIFIER, verifier);
     
     String toSign = getStringToSign(request, CallType.ACCESS_TOKEN);
-    String oAuthHeader = getOAuthHeader(request, toSign, tokenSecret, CallType.ACCESS_TOKEN);
+    String oAuthHeader = getOAuthHeader(request, toSign, requestToken.getSecret(), CallType.ACCESS_TOKEN);
     
     request.addHeader(OAuth.HEADER, oAuthHeader);
   }
   
-  public void sign(Request request, String token, String tokenSecret){
-    params.put(OAuth.TOKEN, token);
+  public void sign(Request request, Token accessToken){
+    params.put(OAuth.TOKEN, accessToken.getToken());
    
     String toSign = getStringToSign(request, CallType.RESOURCE);
-    String oAuthHeader = getOAuthHeader(request, toSign, tokenSecret, CallType.RESOURCE);
+    String oAuthHeader = getOAuthHeader(request, toSign, accessToken.getSecret(), CallType.RESOURCE);
     request.addHeader(OAuth.HEADER, oAuthHeader);
   }
 
