@@ -63,12 +63,11 @@ public class Request {
     addHeaders(connection);
     if(verb.equals(Verb.PUT) || verb.equals(Verb.POST)){
       if(payload != null){
-        addPayload(connection);
+        addBody(connection, payload);
       }else{
-        addBody(connection);
+        addBody(connection, queryString(bodyParams));
       }
     }
-      
     return new Response(connection);
   }
   
@@ -77,17 +76,10 @@ public class Request {
       conn.setRequestProperty(key, headers.get(key));
   }
   
-  void addBody(HttpURLConnection conn) throws IOException{
-    String body = queryString(bodyParams);
-    conn.setRequestProperty(CONTENT_LENGTH, String.valueOf(body.getBytes().length));
+  void addBody(HttpURLConnection conn, String content) throws IOException{
+    conn.setRequestProperty(CONTENT_LENGTH, String.valueOf(content.getBytes().length));
     conn.setDoOutput(true);
-    conn.getOutputStream().write(body.getBytes());
-  }
-  
-  void addPayload(HttpURLConnection conn) throws IOException {
-    conn.setRequestProperty(CONTENT_LENGTH, String.valueOf(payload.getBytes().length));
-    conn.setDoOutput(true);
-    conn.getOutputStream().write(payload.getBytes());
+    conn.getOutputStream().write(content.getBytes());
   }
   
   /**
@@ -130,6 +122,8 @@ public class Request {
    * @return a map containing the query string parameters
    */
   public Set<Map.Entry<String, String>> getQueryStringParams(){
+    //TODO move this into org.scribe.encoders.URL
+    //TODO change name of org.scribe.encoders to org.scribe.utils
     try{
       Map<String, String> params = new HashMap<String, String>();
       String query = new URL(url).getQuery();
