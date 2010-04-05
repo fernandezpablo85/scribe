@@ -17,9 +17,9 @@ package org.scribe.oauth;
 
 import java.util.*;
 
+import org.scribe.eq.*;
 import org.scribe.http.*;
 import org.scribe.http.Request.*;
-import org.scribe.providers.*;
 
 /**
  * The main class. Provides an access point for all OAuth methods.
@@ -30,7 +30,7 @@ import org.scribe.providers.*;
  */
 public class Scribe {
 
-  private static final String PROVIDER = "scribe.provider";
+  private static final String EQUALIZER = "scribe.equalizer";
   private static final String REQUEST_TOKEN_URL = "request.token.url";
   private static final String CALLBACK_URL = "callback.url";
   private static final String REQUEST_TOKEN_VERB = "request.token.verb";
@@ -41,7 +41,7 @@ public class Scribe {
   private static Scribe instance;
   
   private final Properties config;
-  private DefaultProvider provider;
+  private DefaultEqualizer eq;
   
   /**
    * Factory method
@@ -57,18 +57,18 @@ public class Scribe {
   
   private Scribe(Properties props) throws RuntimeException{
     this.config = props;
-    initProvider();
+    initEqualizer();
   }
   
-  private void initProvider(){
-    String providerName = config.getProperty(PROVIDER);
-    if(isEmpty(providerName))
-      this.provider = new DefaultProvider();
+  private void initEqualizer(){
+    String eqName = config.getProperty(EQUALIZER);
+    if(isEmpty(eqName))
+      this.eq = new DefaultEqualizer();
     else
       try{
-        this.provider = (DefaultProvider) Class.forName(providerName).newInstance();
+        this.eq = (DefaultEqualizer) Class.forName(eqName).newInstance();
       }catch(Exception e){
-        throw new RuntimeException("Could not initalize Scribe provider",e);
+        throw new RuntimeException("Could not initalize Scribe equalizer",e);
       }
   }
   
@@ -85,9 +85,9 @@ public class Scribe {
     Request request = getRTRequest();
     OAuthSigner signer = getOAuthSigner();
     signer.signForRequestToken(request, config.getProperty(CALLBACK_URL));
-    provider.tuneRequest(request, CallType.REQUEST_TOKEN);
+    eq.tuneRequest(request, CallType.REQUEST_TOKEN);
     Response response = request.send();
-    return provider.parseRequestTokens(response.getBody());
+    return eq.parseRequestTokens(response.getBody());
   }
   
   private Request getRTRequest() {
@@ -95,7 +95,7 @@ public class Scribe {
   }
 
   private OAuthSigner getOAuthSigner() {
-    return new OAuthSigner(config.getProperty(CONSUMER_KEY),config.getProperty(CONSUMER_SECRET),provider);
+    return new OAuthSigner(config.getProperty(CONSUMER_KEY),config.getProperty(CONSUMER_SECRET),eq);
   }
 
   /**
@@ -109,9 +109,9 @@ public class Scribe {
     Request request = getATRequest();
     OAuthSigner signer = getOAuthSigner();
     signer.signForAccessToken(request, token, verifier);
-    provider.tuneRequest(request, CallType.ACCESS_TOKEN);
+    eq.tuneRequest(request, CallType.ACCESS_TOKEN);
     Response response = request.send();
-    return provider.parseAccessTokens(response.getBody());
+    return eq.parseAccessTokens(response.getBody());
   }
 
   private Request getATRequest() {
@@ -127,6 +127,6 @@ public class Scribe {
   public void signRequest(Request request, Token token){
     OAuthSigner signer = getOAuthSigner();
     signer.sign(request, token);
-    provider.tuneRequest(request, CallType.RESOURCE);
+    eq.tuneRequest(request, CallType.RESOURCE);
   }
 }

@@ -13,7 +13,7 @@ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and
 limitations under the License.
 */
-package org.scribe.providers;
+package org.scribe.eq;
 
 import java.util.regex.*;
 
@@ -22,13 +22,13 @@ import org.scribe.oauth.*;
 
 
 /**
- * Default OAuth provider.
+ * Default OAuth equalizer.
  * 
  * The methods defined here are hooks for subclasses to override. They do nothing by default.
  * 
  * @author Pablo Fernandez
  */
-public class DefaultProvider {
+public class DefaultEqualizer {
   
   private static final String TOKEN_REGEX = "oauth_token=(\\S*)&oauth_token_secret=(\\S*?)(&(.*))?";  
 
@@ -75,7 +75,7 @@ public class DefaultProvider {
   private Token parseTokens(String response){
     Matcher matcher = Pattern.compile(TOKEN_REGEX).matcher(response);
     if(matcher.matches()){
-      return new Token(matcher.group(1), matcher.group(2));
+      return new Token(matcher.group(1), matcher.group(2), response);
     }else{
       throw new RuntimeException("Could not find request token or secret in response: " + response);
     }  

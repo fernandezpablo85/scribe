@@ -18,18 +18,18 @@ package org.scribe.oauth;
 import java.util.*;
 
 import org.scribe.encoders.*;
+import org.scribe.eq.*;
 import org.scribe.http.*;
-import org.scribe.providers.*;
 
 class OAuthSigner {
 
   private final String consumerSecret;
   private final OAuthParameters params;
-  private final DefaultProvider provider;
+  private final DefaultEqualizer eq;
 
-  public OAuthSigner(String consumerKey, String consumerSecret, DefaultProvider provider){
+  public OAuthSigner(String consumerKey, String consumerSecret, DefaultEqualizer eq){
     this.consumerSecret = consumerSecret;
-    this.provider = provider;
+    this.eq = eq;
     this.params = new OAuthParameters(consumerKey);
   }
   
@@ -63,7 +63,7 @@ class OAuthSigner {
   public String getOAuthHeader(Request request, String toSign, String tokenSecret, CallType type){    
     String signature = HMAC.sign(toSign, consumerSecret + '&' + tokenSecret);
     params.put(OAuth.SIGNATURE, signature);
-    return provider.tuneOAuthHeader(request, params.asOAuthHeader(),type);
+    return eq.tuneOAuthHeader(request, params.asOAuthHeader(),type);
   }
   
   public String getStringToSign(Request request, CallType type){
@@ -72,7 +72,7 @@ class OAuthSigner {
     addQueryStringParams(request);
     addBodyParams(request);
     String sortedParams = URL.percentEncode(params.asSortedFormEncodedString());
-    return provider.tuneStringToSign(request, String.format("%s&%s&%s", verb, url, sortedParams), type);
+    return eq.tuneStringToSign(request, String.format("%s&%s&%s", verb, url, sortedParams), type);
   }
   
   private void addQueryStringParams(Request request){
