@@ -64,10 +64,24 @@ public class DefaultEqualizer {
    */
   public void tuneRequest(Request request, CallType type){}
   
+  /**
+   * Hook that lets you parse the raw string you get from the Request Token step and
+   * transform it into a {@link Token} object
+   * 
+   * @param raw response
+   * @return Request Token
+   */
   public Token parseRequestTokens(String response){
     return parseTokens(response);
   }
   
+  /**
+   * Hook that lets you parse the raw string you get from the Access Token step and
+   * transform it into a {@link Token} object
+   * 
+   * @param raw response
+   * @return Access Token
+   */
   public Token parseAccessTokens(String response){
     return parseTokens(response);
   }
