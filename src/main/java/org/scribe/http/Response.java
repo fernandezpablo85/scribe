@@ -25,46 +25,47 @@ import java.util.*;
  * @author Pablo Fernandez
  */
 public class Response {
-  
+
+  private static final String ENCODING = "UTF-8";
   private static final String EMPTY = "";
-  
+
   private int code;
   private String body;
+  private InputStream stream;
   private Map<String, String> headers;
-  
-  
+
   Response(HttpURLConnection connection) throws IOException{
     try{
       connection.connect();
       code = connection.getResponseCode();
-      body = parseBody(connection);
       headers = parseHeaders(connection);
+      stream = wasSuccessful() ? connection.getInputStream() : connection.getErrorStream();
     }catch(UnknownHostException e){
       code = 404;
       body = EMPTY;
     }
   }
-  
-  String parseBody(HttpURLConnection connection) throws IOException{
-    InputStream is = wasSuccessful()? connection.getInputStream() : 
-                                      connection.getErrorStream();
-    
-    return readStream(is);
-  }
-  
-  String readStream(InputStream is) throws IOException{
-    final char[] buffer = new char[0x10000];
-    StringBuilder out = new StringBuilder();
-    Reader in = new InputStreamReader(is, "UTF-8");
-    int read;
 
-    do {
-      read = in.read(buffer, 0, buffer.length);
-      if (read > 0) {
-        out.append(buffer, 0, read);
-      }
-    } while (read >= 0);
-    return out.toString();
+  private String parseBodyContents(){
+    // TODO Move this crap to a 'utils' class that reads a string from a
+    // 
+    try{
+      final char[] buffer = new char[0x10000];
+      StringBuilder out = new StringBuilder();
+      Reader in = new InputStreamReader(stream, ENCODING);
+      int read;
+      do{
+        read = in.read(buffer, 0, buffer.length);
+        if (read > 0){
+          out.append(buffer, 0, read);
+        }
+      }while (read >= 0);
+      in.close();
+      body = out.toString();
+      return body;
+    }catch (IOException ioe){
+      throw new RuntimeException("Error while reading response body", ioe);
+    }
   }
   
   private Map<String, String> parseHeaders(HttpURLConnection conn){
@@ -90,7 +91,17 @@ public class Response {
    * @return response body
    */
   public String getBody(){
-    return body;
+    return body != null ? body : parseBodyContents();
+  }
+  
+  /**
+   * Obtains the meaningful stream of the HttpUrlConnection, either inputStream
+   * or errorInputStream, depending on the status code
+   *
+   * @return input stream / error stream
+   */
+  public InputStream getStream(){
+    return stream;
   }
   
   /**
@@ -113,8 +124,9 @@ public class Response {
   
   /**
    * Obtains a single HTTP Header value, or null if undefined
-   * 
+   *
    * @param header name
+   *
    * @return header value or null
    */
   public String getHeader(String name){
