@@ -14,7 +14,7 @@ public abstract class Spec {
       Properties props = new Properties();
       FileInputStream fis = new FileInputStream(EQUALIZER_RESOURCES_ROOT + properties);
       props.load(fis);
-      return Scribe.getInstance(props);
+      return new Scribe(props);
     }catch(IOException ioe){
       throw new RuntimeException("Error while creating the Scribe instance", ioe);
     }

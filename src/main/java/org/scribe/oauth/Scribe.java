@@ -24,7 +24,9 @@ import org.scribe.http.Request.*;
 /**
  * The main class. Provides an access point for all OAuth methods.
  * 
- * Is intended to be used as a Singleton, and instantiated with the {@link Scribe#getInstance(Properties)} method.
+ * Please get an instance normally, using the public constructor.
+ * The {@link Scribe#getInstance(Properties)} method is kept for compatibility reasons 
+ * but will be removed eventually
  * 
  * @author Pablo Fernandez
  */
@@ -46,16 +48,23 @@ public class Scribe {
   /**
    * Factory method
    * 
+   * @deprecated Use the default constructor instead. If you need to enforce a single instance do so with your own code.
    * @param Scribe properties
    * @return The Scribe single instance
    */
+  @Deprecated
   public static synchronized Scribe getInstance(Properties props){
     if(instance == null)
         instance = new Scribe(props);
     return instance;
   }
   
-  private Scribe(Properties props) throws RuntimeException{
+  /**
+   * Default constructor
+   * 
+   * @param Scribe properties
+   */
+  public Scribe(Properties props){
     this.config = props;
     initEqualizer();
   }

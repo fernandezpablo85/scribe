@@ -4,7 +4,7 @@
   <groupId>org.scribe</groupId>
   <artifactId>scribe</artifactId>
   <packaging>jar</packaging>
-  <version>0.6</version>
+  <version>0.6.5</version>
   <name>Simple OAuth Library</name>
   <dependencies>
   
