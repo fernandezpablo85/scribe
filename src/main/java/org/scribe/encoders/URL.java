@@ -27,9 +27,11 @@ import java.util.*;
 public class URL {
 
   private static final String UTF8 = "UTF-8";
+  private static final String URL_SPACE_ENCODING = "+";
+  private static final String OAUTH_SPEC_SPACE_ENCODING = "%20";
   
   /**
-   * URLencode a given string
+   * Encode a given string as specified in OAuth Spec section 3.6.
    * 
    * @param string to encode
    * @return encoded string
@@ -37,7 +39,8 @@ public class URL {
    */
   public static String percentEncode(String string){
     try{
-      return URLEncoder.encode(string,UTF8);
+      return URLEncoder.encode(string,UTF8)
+      				   .replace(URL_SPACE_ENCODING, OAUTH_SPEC_SPACE_ENCODING);
     }catch(UnsupportedEncodingException uee){
       throw new RuntimeException("Wrong encoding: " + UTF8);
     }
