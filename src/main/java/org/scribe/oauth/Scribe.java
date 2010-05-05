@@ -138,4 +138,15 @@ public class Scribe {
     signer.sign(request, token);
     eq.tuneRequest(request, CallType.RESOURCE);
   }
+  
+  /**
+   * Returns useful debug information about the {@link Request}, JSON style.
+   * 
+   * @param Request to inspect
+   * @param access token
+   * @return request information (JSON)
+   */
+  public String getJsonInfo(Request request, Token token){
+	  return RequestInspector.getJsonInfo(getOAuthSigner(),request, token);
+  }
 }

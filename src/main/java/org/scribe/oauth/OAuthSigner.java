@@ -61,9 +61,13 @@ class OAuthSigner {
   }
 
   public String getOAuthHeader(Request request, String toSign, String tokenSecret, CallType type){    
-    String signature = HMAC.sign(toSign, consumerSecret + '&' + tokenSecret);
+    String signature = getSignature(toSign, tokenSecret);
     params.put(OAuth.SIGNATURE, signature);
     return eq.tuneOAuthHeader(request, params.asOAuthHeader(),type);
+  }
+  
+  public String getSignature(String toSign, String tokenSecret){
+	  return HMAC.sign(toSign, consumerSecret + '&' + tokenSecret);
   }
   
   public String getStringToSign(Request request, CallType type){

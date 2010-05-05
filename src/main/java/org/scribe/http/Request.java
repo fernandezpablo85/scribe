@@ -62,11 +62,7 @@ public class Request {
     connection.setRequestMethod(this.verb.name());
     addHeaders(connection);
     if(verb.equals(Verb.PUT) || verb.equals(Verb.POST)){
-      if(payload != null){
-        addBody(connection, payload);
-      }else{
-        addBody(connection, queryString(bodyParams));
-      }
+      addBody(connection, getBodyContents());
     }
     return new Response(connection);
   }
@@ -165,6 +161,10 @@ public class Request {
     return url.replaceAll("\\?.*", "").replace("\\:\\d{4}", "");
   }
   
+  public String getBodyContents() {
+	return (payload != null) ? payload : queryString(bodyParams).replaceFirst("\\?", "");
+  }
+  
   /**
    * Returns the HTTP Verb
    * 
@@ -172,6 +172,10 @@ public class Request {
    */
   public Verb getVerb(){
     return verb; 
+  }
+  
+  public Map<String, String> getHeaders(){
+	  return headers;
   }
    
   /**
