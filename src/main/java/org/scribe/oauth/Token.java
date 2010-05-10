@@ -15,8 +15,12 @@ limitations under the License.
 */
 package org.scribe.oauth;
 
-public class Token {
+import java.io.*;
 
+public class Token implements Serializable {
+  
+  private static final long serialVersionUID = -211981113194439605L;
+  
   private String token;
   private String secret;
   private String rawString;
