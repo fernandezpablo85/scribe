@@ -42,7 +42,22 @@ public class URL {
       return URLEncoder.encode(string,UTF8)
       				   .replace(URL_SPACE_ENCODING, OAUTH_SPEC_SPACE_ENCODING);
     }catch(UnsupportedEncodingException uee){
-      throw new RuntimeException("Wrong encoding: " + UTF8);
+      throw new RuntimeException("Unsupported encoding: " + UTF8);
+    }
+  }
+  
+  /**
+   * Decodes a percent-encoded string into plaintext
+   * 
+   * @param percent encoded string
+   * @return plaintext string
+   * @throws RuntimeException if the string cannot be decoded
+   */
+  public static String decode(String string){
+    try{
+      return URLDecoder.decode(string, UTF8);
+    }catch(UnsupportedEncodingException uee){
+      throw new RuntimeException("Unsupported encoding: " + UTF8);
     }
   }
   

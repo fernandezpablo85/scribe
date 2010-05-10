@@ -17,6 +17,7 @@ package org.scribe.eq;
 
 import java.util.regex.*;
 
+import org.scribe.encoders.*;
 import org.scribe.http.*;
 import org.scribe.oauth.*;
 
@@ -89,7 +90,9 @@ public class DefaultEqualizer {
   private Token parseTokens(String response){
     Matcher matcher = Pattern.compile(TOKEN_REGEX).matcher(response);
     if(matcher.matches()){
-      return new Token(matcher.group(1), matcher.group(2), response);
+      String token = URL.decode(matcher.group(1));
+      String secret = URL.decode(matcher.group(2));
+      return new Token(token, secret, response);
     }else{
       throw new RuntimeException("Could not find request token or secret in response: " + response);
     }  
