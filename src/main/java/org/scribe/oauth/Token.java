@@ -16,7 +16,15 @@ limitations under the License.
 package org.scribe.oauth;
 
 import java.io.*;
-
+/**
+ * This class represents an OAuth Token, which is formed by a token
+ * and a token_secret.
+ * 
+ * This can be either a <em>Request Token</em> or an <em>Access Token</em>
+ * 
+ * @author Pablo Fernandez
+ *
+ */
 public class Token implements Serializable {
   
   private static final long serialVersionUID = -211981113194439605L;
@@ -25,10 +33,26 @@ public class Token implements Serializable {
   private String secret;
   private String rawString;
   
+  /**
+   * Default constructor
+   * 
+   * @param OAuth Token
+   * @param OAuth Token Secret
+   */
   public Token(String token, String secret){
     this(token, secret, "");
   }
   
+  /**
+   * Equalizer Constructor
+   * 
+   * This is used internally to also store the raw response you get from the request/access token request
+   * You should probably use the Default Constructor instead.
+   * 
+   * @param OAuth Token
+   * @param OAuth Secret
+   * @param Raw Response
+   */
   public Token(String token, String secret, String rawString){
     this.token = token;
     this.secret = secret;
@@ -47,6 +71,9 @@ public class Token implements Serializable {
     return rawString;
   }
   
+  /**
+   * Friendly representation of the Token. Do not depend on the format as it may change.
+   */
   public String toString(){
     return String.format("oauth_token -> %s oauth_token_secret -> %s",token,secret);
   }
