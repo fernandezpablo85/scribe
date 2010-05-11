@@ -15,8 +15,6 @@ limitations under the License.
 */
 package org.scribe.oauth;
 
-import java.util.*;
-
 import org.scribe.eq.*;
 import org.scribe.http.*;
 import org.scribe.http.Request.*;
@@ -31,18 +29,10 @@ import org.scribe.http.Request.*;
  * @author Pablo Fernandez
  */
 public class Scribe {
-
-  private static final String EQUALIZER = "scribe.equalizer";
-  private static final String REQUEST_TOKEN_URL = "request.token.url";
-  private static final String CALLBACK_URL = "callback.url";
-  private static final String REQUEST_TOKEN_VERB = "request.token.verb";
-  private static final String ACCESS_TOKEN_URL = "access.token.url";
-  private static final String ACCESS_TOKEN_VERB = "access.token.verb";
-  private static final String CONSUMER_SECRET = "consumer.secret";
-  private static final String CONSUMER_KEY = "consumer.key";
+  
   private static Scribe instance;
   
-  private final Properties config;
+  private final java.util.Properties config;
   private DefaultEqualizer eq;
   
   /**
@@ -53,7 +43,7 @@ public class Scribe {
    * @return The Scribe single instance
    */
   @Deprecated
-  public static synchronized Scribe getInstance(Properties props){
+  public static synchronized Scribe getInstance(java.util.Properties props){
     if(instance == null)
         instance = new Scribe(props);
     return instance;
@@ -64,13 +54,13 @@ public class Scribe {
    * 
    * @param Scribe properties
    */
-  public Scribe(Properties props){
+  public Scribe(java.util.Properties props){
     this.config = props;
     initEqualizer();
   }
   
   private void initEqualizer(){
-    String eqName = config.getProperty(EQUALIZER);
+    String eqName = config.getProperty(Scribe.Properties.EQUALIZER);
     if(isEmpty(eqName))
       this.eq = new DefaultEqualizer();
     else
@@ -93,18 +83,18 @@ public class Scribe {
   public Token getRequestToken(){
     Request request = getRTRequest();
     OAuthSigner signer = getOAuthSigner();
-    signer.signForRequestToken(request, config.getProperty(CALLBACK_URL));
+    signer.signForRequestToken(request, config.getProperty(Scribe.Properties.CALLBACK_URL));
     eq.tuneRequest(request, CallType.REQUEST_TOKEN);
     Response response = request.send();
     return eq.parseRequestTokens(response.getBody());
   }
   
   private Request getRTRequest() {
-    return new Request(Verb.valueOf(config.getProperty(REQUEST_TOKEN_VERB)), config.getProperty(REQUEST_TOKEN_URL));
+    return new Request(Verb.valueOf(config.getProperty(Scribe.Properties.REQUEST_TOKEN_VERB)), config.getProperty(Scribe.Properties.REQUEST_TOKEN_URL));
   }
 
   private OAuthSigner getOAuthSigner() {
-    return new OAuthSigner(config.getProperty(CONSUMER_KEY),config.getProperty(CONSUMER_SECRET),eq);
+    return new OAuthSigner(config.getProperty(Scribe.Properties.CONSUMER_KEY), config.getProperty(Scribe.Properties.CONSUMER_SECRET),eq);
   }
 
   /**
@@ -124,7 +114,7 @@ public class Scribe {
   }
 
   private Request getATRequest() {
-    return new Request(Verb.valueOf(config.getProperty(ACCESS_TOKEN_VERB)), config.getProperty(ACCESS_TOKEN_URL));
+    return new Request(Verb.valueOf(config.getProperty(Scribe.Properties.ACCESS_TOKEN_VERB)), config.getProperty(Scribe.Properties.ACCESS_TOKEN_URL));
   }
   
   /**
@@ -149,4 +139,22 @@ public class Scribe {
   public String getJsonInfo(Request request, Token token){
 	  return RequestInspector.getJsonInfo(getOAuthSigner(),request, token);
   }
+  
+  /**
+   * Inner class that holds the property keys for the configuration file.
+   * Useful if you create the {@link java.util.Properties} programmatically
+   * 
+   * @author Pablo Fernandez
+   */
+  public static class Properties {
+    
+    public static final String EQUALIZER = "scribe.equalizer";
+    public static final String REQUEST_TOKEN_URL = "request.token.url";
+    public static final String CALLBACK_URL = "callback.url";
+    public static final String REQUEST_TOKEN_VERB = "request.token.verb";
+    public static final String ACCESS_TOKEN_URL = "access.token.url";
+    public static final String ACCESS_TOKEN_VERB = "access.token.verb";
+    public static final String CONSUMER_SECRET = "consumer.secret";
+    public static final String CONSUMER_KEY = "consumer.key"; 
+  } 
 }
