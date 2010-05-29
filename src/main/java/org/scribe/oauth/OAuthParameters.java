@@ -31,7 +31,7 @@ class OAuthParameters {
     params.put(OAuth.TIMESTAMP,   getTimestampInSeconds());
     params.put(OAuth.SIGN_METHOD, "HMAC-SHA1");
     params.put(OAuth.VERSION,     "1.0");
-    params.put(OAuth.NONCE,       MD5.hexHash(getTimestampInSeconds()));
+    params.put(OAuth.NONCE,       MD5.hexHash(getTimestampInSeconds() + new Random().nextInt()));
     params.put(OAuth.CONSUMER_KEY, consumerKey);
   }
   
