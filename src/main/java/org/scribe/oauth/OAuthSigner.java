@@ -67,7 +67,7 @@ class OAuthSigner {
   }
   
   public String getSignature(String toSign, String tokenSecret){
-	  return HMAC.sign(toSign, consumerSecret + '&' + tokenSecret);
+	  return HMAC.sign(toSign, URL.percentEncode(consumerSecret) + '&' + URL.percentEncode(tokenSecret));
   }
   
   public String getStringToSign(Request request, CallType type){
