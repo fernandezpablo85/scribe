@@ -1,1 +1,1 @@
-h1. Scribe has moved! Find the new version (1.0) "here":http://github.com/fernandezpablo85/scribe! 
+h1. Scribe has moved! Find the new version (1.0) "here":http://github.com/fernandezpablo85/scribe-java! 
